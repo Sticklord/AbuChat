@@ -1,0 +1,15 @@
+## Interface: 50400
+## Title: |cffffffffAbu|rChat
+## Author: Abu
+## RequiredDeps: AbuEssentials
+
+core.lua
+
+classcolor.lua
+copy.lua
+hyperlink.lua
+invite.lua
+repeats.lua
+tabs.lua
+urlcopy.lua
+whisper.lua
