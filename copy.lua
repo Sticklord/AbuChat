@@ -32,6 +32,7 @@ local function CreateCopyFrame()
     f.b:SetMultiLine(true)
     f.b:SetMaxLetters(20000)
     f.b:SetSize(450, 270)
+    f.b:SetAutoFocus(true)
     f.b:SetScript('OnEscapePressed', function()
         f:Hide() 
     end)
@@ -51,9 +52,8 @@ local function GetChatLines(...)
         local region = select(i, ...)
         if (region:GetObjectType() == 'FontString') then
             line = tostring(region:GetText())
-            lines[count] = line:gsub('|TInterface(.-)|t', '')
-            lines[count] = line:gsub('|H(.-)|h', '')
-            lines[count] = line:gsub('|K(.-)|k', '')
+            lines[count] = line:gsub("(|TInterface(.*)|t)", "")
+            
             count = count + 1
         end
     end
