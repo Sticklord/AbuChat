@@ -71,5 +71,5 @@ local function EnableHyperlink()
     end
 end
 
-ns.RegisterEvent("PLAYER_LOGIN", EnableHyperlink)
+ns:RegisterEvent("PLAYER_LOGIN", EnableHyperlink)
 

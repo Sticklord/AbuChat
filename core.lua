@@ -1,15 +1,10 @@
 
 local _, ns = ...
-setmetatable(ns, { __index = ABUADDONS })
-local cfg = ns.Config.Chat
 
-local _G = _G
-local type = type
-local select = select
-local unpack = unpack
+local cfg = ns.Config
 
-local gsub = string.gsub
-local format = string.format
+local   _G, type, select, unpack, gsub, format =
+        _G, type, select, unpack, gsub, format 
 
 _G.CHAT_FRAME_FADE_OUT_TIME = 0.25
 _G.CHAT_FRAME_FADE_TIME = 0.1
@@ -150,7 +145,7 @@ local function ModChat(self)
     })
 
     editbox:SetBackdropColor(0, 0, 0, 0.5)
-    ns.CreateBorder(editbox, 11)
+    AbuGlobal.CreateBorder(editbox, 11)
     editbox:SetBorderPadding(-1, -1, -2, -2)
 
     if (cfg.enableBorderColoring) then
@@ -219,7 +214,7 @@ ChatFrame1Tab:HookScript('OnClick', function(self, button)
 end)
 
 -- Modify the GM Chat
-local function ModGMChat(_, event, ...)
+ns:RegisterEvent("ADDON_LOADED", function(_, event, ...)
     if (... == 'Blizzard_GMChatUI') then
         GMChatFrame:EnableMouseWheel(true)
         GMChatFrame:SetScript('OnMouseWheel', ChatFrame1:GetScript('OnMouseWheel'))
@@ -234,12 +229,89 @@ local function ModGMChat(_, event, ...)
         GMChatFrameBottomButton:SetAlpha(0)
         GMChatFrameBottomButton:EnableMouse(false)
     end
-end
-ns.RegisterEvent("ADDON_LOADED", ModGMChat)
+end)
 
 -- Add a sound notification on incoming whispers
 local function Pling()
     PlaySoundFile('Sound\\Spells\\Simongame_visual_gametick.wav')
 end
-ns.RegisterEvent("CHAT_MSG_WHISPER", Pling)
-ns.RegisterEvent("CHAT_MSG_BN_WHISPER", Pling)
+ns:RegisterEvent("CHAT_MSG_WHISPER", Pling)
+ns:RegisterEvent("CHAT_MSG_BN_WHISPER", Pling)
+
+-------------------------------------------------
+--      Tell target /tt
+
+for i = 1, NUM_CHAT_WINDOWS do
+    local editBox = _G['ChatFrame'..i..'EditBox']
+
+    editBox:HookScript('OnTextChanged', function(self)
+        local text = self:GetText()
+        if (UnitExists('target') and UnitIsPlayer('target') and UnitIsFriend('player', 'target')) then
+            if (text:len() < 5) then
+                if (text:sub(1, 4) == '/tt ') then
+                    local unitname, realm = UnitName('target')
+
+                    if (unitname) then 
+                        unitname = gsub(unitname, ' ', '') 
+                    end
+
+                    if (unitname and not UnitIsSameServer('player', 'target')) then
+                        unitname = unitname..'-'..gsub(realm, ' ', '')
+                    end
+
+                    ChatFrame_SendTell((unitname or 'Invalid target'), ChatFrame1)
+                end
+            end
+        end
+    end)
+end
+
+-------------------------------------------------
+--      Alt click to invite
+
+local sub = string.sub
+local match = string.match
+
+local origSetItemRef = SetItemRef
+function _G.SetItemRef(link, text, button)
+    local linkType = sub(link, 1, 6)
+    if (IsAltKeyDown() and linkType == 'player') then
+        local name = match(link, 'player:([^:]+)')
+        InviteUnit(name)
+        return nil
+    end
+
+    return origSetItemRef(link,text,button)
+end
+
+-------------------------------------------------
+--      Force Class colors
+
+local function EnableClassColorChat()
+    for i = 1, 11 do
+        ToggleChatColorNamesByClassGroup(true, "CHANNEL"..i)
+        local box = _G["ChatConfigChannelSettingsLeftCheckBox"..i.."ColorClasses"]
+        if box then
+            box:SetChecked(true)
+            box:Disable()
+        end
+    end
+    for i = 1, #CHAT_CONFIG_CHAT_LEFT do
+        ToggleChatColorNamesByClassGroup(true, CHAT_CONFIG_CHAT_LEFT[i].type)
+        local box = _G["ChatConfigChatSettingsLeftCheckBox"..i.."ColorClasses"]
+        if box then
+            box:SetChecked(true)
+            box:Disable()
+        end
+    end
+end
+
+hooksecurefunc("ChatConfig_UpdateCheckboxes", function(frame)
+    if frame == ChatConfigChatSettingsLeft or frame == ChatConfigChannelSettingsLeft then
+        EnableClassColorChat()
+    end
+end)
+
+ns:RegisterEvent("PLAYER_ENTERING_WORLD", EnableClassColorChat)
+
+AbuGlobal.EnableClassColorChat = EnableClassColorChat

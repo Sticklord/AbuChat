@@ -1,6 +1,6 @@
 
 local _, ns = ...
-local cfg = ns.Config.Chat
+local cfg = ns.Config
 								--DEFAULT
 _G.CHAT_TAB_SHOW_DELAY = 0.2;   -- 0.2;
 _G.CHAT_TAB_HIDE_DELAY = 1;	    -- 1;
@@ -63,12 +63,7 @@ end
 --	[[	Update The Tabs  ]]  --
 local function UpdateTabs()
 	local chat, tab
-
-	local function Murder(object)
-		object.Show = function(...) end
-		object:Hide()
-	end
-
+	
 	for _, chatName in pairs(CHAT_FRAMES) do
 		chat = _G[chatName]
 		tab = _G[chatName.."Tab"]
@@ -92,7 +87,8 @@ local function UpdateTabs()
 			end
 
 			if tab.conversationIcon then
-				Murder(tab.conversationIcon)
+				tab.conversationIcon.Show = function(...) end
+				tab.conversationIcon:Hide()
 			end
 
 			-- Hook Tab
@@ -157,4 +153,4 @@ local function SetupHooks()
 	UpdateTabs()
 end
 
-ns.RegisterEvent("PLAYER_LOGIN", SetupHooks)
+ns:RegisterEvent("PLAYER_LOGIN", SetupHooks)

@@ -3,13 +3,14 @@
 ## Author: Abu
 ## RequiredDeps: AbuEssentials
 
-core.lua
+libs\AbuTheLib.lua
 
+CONFIG.lua
+
+core.lua
 classcolor.lua
 copy.lua
 hyperlink.lua
-invite.lua
 repeats.lua
 tabs.lua
 urlcopy.lua
-whisper.lua

@@ -2,7 +2,7 @@ local _, ns = ...
 local select = select
 local tostring = tostring
 local concat = table.concat
-local f = nil
+local f
 
 --  [[  The Copy Window  ]]  --
 local function CreateCopyFrame()
@@ -12,7 +12,7 @@ local function CreateCopyFrame()
     f:SetPoint('BOTTOMLEFT', ChatFrame1EditBox, 'TOPLEFT', 3, 10)
     f:SetPoint('BOTTOMRIGHT', ChatFrame1EditBox, 'TOPRIGHT', -3, 10)
     f:SetFrameStrata('DIALOG')
-    ns.CreateBorder(f, 12)
+    AbuGlobal.CreateBorder(f, 12)
     f:SetBackdrop({
         bgFile = 'Interface\\DialogFrame\\UI-DialogBox-Background',
         edgeFile = '',
@@ -125,4 +125,4 @@ local function EnableCopyButton()
     end
 end
 hooksecurefunc('FCF_OpenTemporaryWindow', EnableCopyButton)
-ns.RegisterEvent("PLAYER_LOGIN", EnableCopyButton)
+ns:RegisterEvent("PLAYER_LOGIN", EnableCopyButton)

@@ -56,4 +56,4 @@ function _G.ChatFrame_OnHyperlinkShow(frame, link, text, button)
 	end
 end
 
-ns.RegisterEvent("PLAYER_LOGIN", EnableURLCopy)
+ns:RegisterEvent("PLAYER_LOGIN", EnableURLCopy)
