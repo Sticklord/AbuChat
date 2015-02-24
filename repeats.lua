@@ -1,6 +1,6 @@
 local _, ns = ...
 
-local playerName
+local playerName = UnitName("player")
 local cache = { }
 
 local REPEAT_EVENTS = {
@@ -29,11 +29,7 @@ local function HideRepeats(frame, event, message, sender, ...)
 	return false, message, sender, ...
 end
 
-local function EnableHideRepeats()
-	playerName = UnitName("player")
-	for _, event in ipairs(REPEAT_EVENTS) do
-		ChatFrame_AddMessageEventFilter(event, HideRepeats)
-	end
+for _, event in ipairs(REPEAT_EVENTS) do
+	ChatFrame_AddMessageEventFilter(event, HideRepeats)
 end
 
-ns:RegisterEvent("PLAYER_LOGIN", EnableHideRepeats)

@@ -1,6 +1,7 @@
 local _, ns = ...
 
 ns.Config = {
+	chatfont = AbuGlobal.GlobalConfig.Fonts.Normal,
 	disableFade = true,
 	chatOutline = false,
 

@@ -5,12 +5,9 @@
 
 libs\AbuTheLib.lua
 
+defaults.lua
 CONFIG.lua
 
 core.lua
-classcolor.lua
 copy.lua
-hyperlink.lua
 repeats.lua
-tabs.lua
-urlcopy.lua

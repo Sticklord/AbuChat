@@ -84,7 +84,7 @@ local function copyChat(self)
 end
 
 --  [[  Creating Buttons  ]]  --
-local function CreateCopyButton(self)
+table.insert(ns.onInit, function(self)
     self.Copy = CreateFrame('Button', self:GetName()..'CopyChatButton', _G[self:GetName()])
     self.Copy:SetSize(20, 20)
     self.Copy:SetPoint('TOPRIGHT', self, -5, -5)
@@ -113,16 +113,4 @@ local function CreateCopyButton(self)
             copyChat(self)
         end
     end)
-end
-
---  [[  Enabling buttons  ]]  --
-local function EnableCopyButton()
-    for _, v in pairs(CHAT_FRAMES) do
-        local chat = _G[v]
-        if (chat and not chat.Copy) then
-            CreateCopyButton(chat)
-        end
-    end
-end
-hooksecurefunc('FCF_OpenTemporaryWindow', EnableCopyButton)
-ns:RegisterEvent("PLAYER_LOGIN", EnableCopyButton)
+end)
