@@ -418,8 +418,8 @@ local function StyleChatFrame(self)
 
 -- EDITBOXES
 	local editbox = _G[name.."EditBox"]
-	for k = 6, 11 do
-		select(k, editbox:GetRegions()):SetTexture(nil)
+	for _, v in pairs({'Left', 'Mid', 'Right', 'FocusLeft', 'FocusMid', 'FocusRight'}) do
+		_G[name..'EditBox'..v]:SetTexture(nil)
 	end
 
 	editbox:SetAltArrowKeyMode(false)
