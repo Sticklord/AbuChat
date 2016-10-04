@@ -4,6 +4,7 @@ ns.Config = {
 	chatfont = AbuGlobal.GlobalConfig.Fonts.Normal,
 	disableFade = true,
 	chatOutline = false,
+	classColoredChat = true,
 
 	enableHyperlinkTooltip = true, 
 	enableBorderColoring = true,

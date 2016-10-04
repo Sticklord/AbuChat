@@ -12,7 +12,7 @@ local   _G, type, select, unpack, gsub, format, match =
 --_G.CHAT_TAB_SHOW_DELAY = 0.2;   -- 0.2;
 --_G.CHAT_TAB_HIDE_DELAY = 1;	    -- 1;
 
-----_G.CHAT_FRAME_TAB_SELECTED_MOUSEOVER_ALPHA = 1.0; -- 1.0;
+--_G.CHAT_FRAME_TAB_SELECTED_MOUSEOVER_ALPHA = 1.0; -- 1.0;
 --_G.CHAT_FRAME_TAB_SELECTED_NOMOUSE_ALPHA = 0; -- 0.4;
 --_G.CHAT_FRAME_TAB_ALERTING_MOUSEOVER_ALPHA = 1.0; -- 1.0;
 --_G.CHAT_FRAME_TAB_ALERTING_NOMOUSE_ALPHA = 1.0; -- 1.0;
@@ -257,7 +257,6 @@ do
 			local box = _G["ChatConfigChannelSettingsLeftCheckBox"..i.."ColorClasses"]
 			if box then
 				box:SetChecked(true)
-				box:Disable()
 			end
 		end
 		for i = 1, #CHAT_CONFIG_CHAT_LEFT do
@@ -265,17 +264,15 @@ do
 			local box = _G["ChatConfigChatSettingsLeftCheckBox"..i.."ColorClasses"]
 			if box then
 				box:SetChecked(true)
-				box:Disable()
 			end
 		end
 	end
 
 	hooksecurefunc("ChatConfig_UpdateCheckboxes", function(frame)
-		if frame == ChatConfigChatSettingsLeft or frame == ChatConfigChannelSettingsLeft then
+		if ns.Config.classColoredChat and (frame == ChatConfigChatSettingsLeft or frame == ChatConfigChannelSettingsLeft) then
 			EnableClassColorChat()
 		end
 	end)
-	_G.AbuGlobal.EnableClassColorChat = EnableClassColorChat
 end
 
 --------------------------------------------------------------------------------------------------
@@ -295,9 +292,9 @@ do
 				index = index + 1
 			end
 
-			msg = msg:gsub('(|HBNplayer.-|h)%[(.-)%]|h', '%1%2|h')
-						:gsub('(|Hplayer.-|h)%[(.-)%]|h', '%1%2|h')
-						:gsub('%[(%d0?)%. (.-)%]', '(%1)')
+			--msg = msg:gsub('(|HBNplayer.-|h)%[(.-)%]|h', '%1%2|h')
+			--			:gsub('(|Hplayer.-|h)%[(.-)%]|h', '%1%2|h')
+			--			:gsub('%[(%d0?)%. (.-)%]', '(%1)')
 		end
 		return ChatFrames[self].AddMessage(self, msg, ...)
 	end
@@ -316,7 +313,6 @@ end
 local SELECTED, FLASHING = 0, 1
 
 local function UpdateTab(self, style)
-	if true then return end
 	local color
 	if (style == SELECTED) then
 		color = cfg.tab.selectedColor
@@ -332,7 +328,6 @@ local function UpdateTab(self, style)
 end
 
 local function UpdateTabs()
-	if true then return end
 	for i = 1, #CHAT_FRAMES do
 		local chat = _G[CHAT_FRAMES[i]]
 		local tab = _G[CHAT_FRAMES[i].."Tab"]
@@ -347,7 +342,7 @@ local function UpdateTabs()
 	end
 end
 
---_G.FCFTab_UpdateColors = function() end
+_G.FCFTab_UpdateColors = nop
 
 --------------------------------------------------------------------------------------------------
 --      Mod each chat window
@@ -516,8 +511,6 @@ AbuChat:RegisterEvent("ADDON_LOADED")
 AbuChat:RegisterEvent("CHAT_MSG_WHISPER")
 AbuChat:RegisterEvent("CHAT_MSG_BN_WHISPER")
 
-local Num_Seen_Chatframes = 1
-
 AbuChat:SetScript("OnEvent", function(self, event, ...)
 	if (event == "ADDON_LOADED") then
 
@@ -569,7 +562,7 @@ hooksecurefunc("FCF_OpenTemporaryWindow", function()
 end)
 
 hooksecurefunc("FCF_SetChatWindowFontSize", function(self, chatframe, size)
-	if (not chatFrame) then
+	if (not chatframe) then
 		chatframe = FCF_GetCurrentChatFrame()
 	end
 	SetChatFont(chatframe, size or self.value)
